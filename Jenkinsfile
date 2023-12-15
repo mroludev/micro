@@ -31,7 +31,17 @@ pipeline {
 		//  }
 	  
 	  // }
-	
+
+    stage('Docker Build and Push') {
+      steps {
+        script {
+          sh 'docker-compose build'
+          sh 'docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY'
+          sh 'docker-compose push'
+        }
+      }
+    }
+    
 	  stage('Build adservice Image') {
         when { changeset "./src/adservice/*"}
 	     steps {
