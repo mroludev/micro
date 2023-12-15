@@ -6,6 +6,7 @@ pipeline {
         DOCKER_REGISTRY = 'mrolu.dev:5000'
         DOCKER_REGISTRY_USERNAME = 'mrolu'
         DOCKER_REGISTRY_PASSWORD = 'MonAvi1$'
+        BUILD_NUMBER = 'v1'
         adserviceRegistry = "mrolu.dev:5000/micros/adservice"
         cartserviceRegistry = "mrolu.dev:5000/micros/cartservice"
         mainRegistry = "repository.k8sengineers.com/apexrepo/main"
