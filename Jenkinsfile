@@ -33,7 +33,7 @@ pipeline {
 	  // }
 	
 	  stage('Build adservice Image') {
-        when { changeset "src/adservice/*"}
+        when { changeset "./src/adservice/*"}
 	     steps {
 		   
 		     script {
