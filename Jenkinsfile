@@ -2,32 +2,32 @@ pipeline {
     agent any
 	
 	environment {
-        clientRegistry = "repository.k8sengineers.com/apexrepo/client"
-        booksRegistry = "repository.k8sengineers.com/apexrepo/books"
+        adserviceRegistry = "mrolu.dev:5000/micros/adservice"
+        cartserviceRegistry = "mrolu.dev:5000/micros/cartservice"
         mainRegistry = "repository.k8sengineers.com/apexrepo/main"
-        registryCredential = 'NexusRepoLogin'
-        cartRegistry = "https://repository.k8sengineers.com"
+        registryCredential = 'mrolu'
+        myRegistry = "https://mrolu.dev:5000"
     }
 	
 	stages {
 	
-	  stage('Build Angular Image') {
-        when { changeset "client/*"}
+	  stage('Build adservice Image') {
+        when { changeset "src/adservice/*"}
 	     steps {
 		   
 		     script {
-                dockerImage = docker.build( clientRegistry + ":$BUILD_NUMBER", "./client/")
+                dockerImage = docker.build( adserviceRegistry + ":$BUILD_NUMBER", "./src/adservice")
              }
 
 		 }
 	  
 	  }
 	  
-	  stage('Deploy Angular Image') {
-          when { changeset "client/*"}
+	  stage('Deploy adservice Image') {
+          when { changeset "src/adservice/*"}
           steps{
             script {
-              docker.withRegistry( cartRegistry, registryCredential ) {
+              docker.withRegistry( myRegistry, registryCredential ) {
                 dockerImage.push("$BUILD_NUMBER")
                 dockerImage.push('latest')
               }
@@ -35,7 +35,7 @@ pipeline {
           }
 	   }
 
-       stage('Kubernetes Deploy Angular') {
+       stage('Kubernetes Deploy adservice') {
            when { changeset "client/*"}
             steps {
                   withCredentials([file(credentialsId: 'CartWheelKubeConfig1', variable: 'config')]){
