@@ -4,7 +4,7 @@ pipeline {
 	environment {
         SONAR_TOKEN = credentials('qa_32a6cd1251a8d98bb62a57fefcbb904b1dd1213b')
         DOCKER_REGISTRY = 'mrolu.dev:5000'
-        DOCKER-REGISTRY_USERNAME = 'mrolu'
+        DOCKER_REGISTRY_USERNAME = 'mrolu'
         DOCKER_REGISTRY_PASSWORD = 'MonAvi1$'
         adserviceRegistry = "mrolu.dev:5000/micros/adservice"
         cartserviceRegistry = "mrolu.dev:5000/micros/cartservice"
