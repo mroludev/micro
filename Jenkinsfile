@@ -3,10 +3,11 @@ pipeline {
 	
 	environment {
         SONAR_TOKEN = credentials('qa_32a6cd1251a8d98bb62a57fefcbb904b1dd1213b')
-        DOCKER_REGISTRY = 'mrolu.dev:5000'
+        DOCKER_REGISTRY = 'mrolu.dev:5000/micros '
         DOCKER_REGISTRY_USERNAME = 'mrolu'
         DOCKER_REGISTRY_PASSWORD = 'MonAvi1$'
-        BUILD_NUMBER = 'v1'
+        registryCredential = 'dockerhub'
+       
         adserviceRegistry = "mrolu.dev:5000/micros/adservice"
         cartserviceRegistry = "mrolu.dev:5000/micros/cartservice"
         mainRegistry = "repository.k8sengineers.com/apexrepo/main"
@@ -16,12 +17,13 @@ pipeline {
 	
 	stages {
 
-    stage('Checkout') {
-        steps {
-            checkout scm
-		 }
+    // stage('Checkout') {
+    //     steps {
+    //         checkout scm
+		//  }
 	  
-	  }
+	  // }
+  
 
     // stage('SonarQube Analysis') {
     //       steps {
@@ -31,28 +33,36 @@ pipeline {
 		//  }
 	  
 	  // }
-
-    stage('Docker Build and Push') {
+    stage('Build App Images') {
       steps {
         script {
-          sh 'docker-compose build'
-          sh 'docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY'
-          sh 'docker-compose push'
+            dockerImage = docker.build registry + ":V$BUILD_NUMBER"
         }
       }
     }
     
-	  stage('Build adservice Image') {
-        when { changeset "./src/adservice/*"}
-	     steps {
-		   
-		     script {
-                dockerImage = docker.build( adserviceRegistry + ":$BUILD_NUMBER", "./src/adservice")
-             }
 
-		 }
+    // stage('Docker Build and Push') {
+    //   steps {
+    //     script {
+    //       sh 'docker-compose build'
+    //       sh 'docker login -u $DOCKER_REGISTRY_USERNAME -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY'
+    //       sh 'docker-compose push'
+    //     }
+    //   }
+    // }
+    
+	  // stage('Build adservice Image') {
+    //     when { changeset "./src/adservice/*"}
+	  //    steps {
+		   
+		//      script {
+    //             dockerImage = docker.build( adserviceRegistry + ":$BUILD_NUMBER", "./src/adservice")
+    //          }
+
+		//  }
 	  
-	  }
+	  // }
 	  
 	  // stage('Deploy adservice Image') {
     //       when { changeset "src/adservice/*"}
